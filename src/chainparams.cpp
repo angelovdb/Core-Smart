@@ -140,7 +140,7 @@ public:
 
         //! 1.3 Parameter
         consensus.nRewardsBlocksPerRound_1_3 = 142500;
-        consensus.nRewardsFirst_1_3_Round = 31;
+        consensus.nRewardsFirst_1_3_Round = 99;   //Will get stuck at 1800000
         consensus.nRewardsPayouts_1_3_BlockStretch = 10990; // 1 week
         consensus.nRewardsPayouts_1_3_BlockPayees = 10;
 
