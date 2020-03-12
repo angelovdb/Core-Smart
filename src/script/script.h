@@ -618,7 +618,6 @@ public:
     bool IsZerocoinMint() const;
     bool IsZerocoinSpend() const;
     bool IsVoteKeyData() const;
-    bool IsVoteProofData() const;
     // Called by IsStandardTx.
     bool HasCanonicalPushes() const;
 

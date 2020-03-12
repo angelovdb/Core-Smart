@@ -371,26 +371,26 @@ void CSmartRewardEntry::SetNull()
     fDisqualifyingTx = false;
     smartnodePaymentTx.SetNull();
     fSmartnodePaymentTx = false;
-    voteProof.SetNull();
-    fVoteProven = false;
+    activationTx.SetNull();
+    fActivated = false;
 }
 
 string CSmartRewardEntry::ToString() const
 {
     std::stringstream s;
-    s << strprintf("CSmartRewardEntry(id=%s, balance=%d, balanceEligible=%d, isSmartNode=%b, voteProven=%b)\n",
+    s << strprintf("CSmartRewardEntry(id=%s, balance=%d, balanceEligible=%d, isSmartNode=%b, activated=%b)\n",
         GetAddress(),
         balance,
         balanceEligible,
         fSmartnodePaymentTx,
-        fVoteProven);
+        fActivated);
     return s.str();
 }
 
-void CSmartRewardEntry::SetIsVoteProven(const uint256& txHash)
+void CSmartRewardEntry::SetIsActivated(const uint256& txHash)
 {
-    voteProof = txHash;
-    fVoteProven = true;
+    activationTx = txHash;
+    fActivated = true;
 }
 
 void CSmartRewardEntry::SetIsNode(const uint256& txHash)
@@ -405,10 +405,10 @@ void CSmartRewardEntry::SetDisqualifyingTx(const uint256& txHash)
     fDisqualifyingTx = true;
 }
 
-void CSmartRewardEntry::ResetIsVoteProven()
+void CSmartRewardEntry::ResetIsActivated()
 {
-    voteProof.SetNull();
-    fVoteProven = false;
+    activationTx.SetNull();
+    fActivated = false;
 }
 void CSmartRewardEntry::ResetIsNode()
 {
@@ -423,14 +423,14 @@ void CSmartRewardEntry::ResetDisqualifyingTx()
 
 void CSmartRewardEntry::ResetEntryFlags()
 {
-    ResetIsVoteProven();
+    ResetIsActivated();
     ResetIsNode();
     ResetDisqualifyingTx();
 }
 
 bool CSmartRewardEntry::IsEligible()
 {
-    return fVoteProven && !fSmartnodePaymentTx && balanceEligible > 0 && !fDisqualifyingTx;
+    return fActivated && !fSmartnodePaymentTx && balanceEligible > 0 && !fDisqualifyingTx;
 }
 
 bool CSmartRewardEntry::IsEligible_1_2() const
@@ -439,7 +439,7 @@ bool CSmartRewardEntry::IsEligible_1_2() const
 }
 bool CSmartRewardEntry::IsEligible_1_3() const
 {
-    return (fVoteProven && !fSmartnodePaymentTx && !fDisqualifyingTx && balance > 0 && balance >= SMART_REWARDS_MIN_BALANCE_1_3);
+    return (fActivated && !fSmartnodePaymentTx && !fDisqualifyingTx && balance > 0 && balance >= SMART_REWARDS_MIN_BALANCE_1_3);
 }
 
 string CSmartRewardBlock::ToString() const
