@@ -286,11 +286,12 @@ void CSmartRewards::EvaluateRound(CSmartRewardRound &next)
             } else {
                 entry->second->balanceEligible = 0;
             }
+            entry->second->balanceAtStart = entry->second->balance;
             ++entry;
         }
 // for testing
 //next.eligibleEntries=1;
-        double rpercent = next.eligibleSmart > 10000 ? ( next.rewards / next.eligibleSmart ) : 0;
+        double rpercent = next.eligibleSmart > 10000 ? ( (double)next.rewards / (double)next.eligibleSmart ) : 0;
 //        round->percent = next.eligibleSmart > 0 ? ( next.rewards / next.eligibleSmart ) : 0;
 //        double rpercent = next.eligibleSmart > 0 ? ( cache.GetCurrentRound()->rewards / next.eligibleSmart ) : 0;
 //        double rpercent = next.eligibleSmart > 0 ? ( round->rewards / next.eligibleSmart ) : 0;
@@ -313,6 +314,7 @@ LogPrintf("Testing1.3 loop balanceEligible %d\n", entry->second->balanceEligible
 LogPrintf("Testing1.3 loop Reward %d\n", nReward);
             }
         // Calculate rewards for next cycle
+        next.rewards = 0;
         nStartHeight = next.startBlockHeight;
         while( nStartHeight <= next.endBlockHeight) next.rewards += GetBlockValue(nStartHeight++, 0, nTime) * dBlockReward;
         // Reset outgoing transaction with every cycle.
@@ -387,10 +389,12 @@ LogPrintf("Testing1.3 loop Reward %d\n", nReward);
                 ++next.eligibleEntries;
                 next.eligibleSmart += entry->second->balanceEligible;
             }
-            // Reset activations before 1.3 round starts.
+            // Reset activations and reset eligible before 1.3 round starts.
             if( next.number == (nFirst_1_3_Round) ){
                 entry->second->activationTx.SetNull();
                 entry->second->fActivated = false;
+                next.eligibleEntries = 0;
+                next.eligibleSmart = 0;
             }
             ++entry;
         }
